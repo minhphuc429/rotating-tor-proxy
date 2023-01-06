@@ -1,32 +1,22 @@
-FROM ubuntu:14.04
-MAINTAINER Matthias Kadenbach <matthias.kadenbach@gmail.com>
-
-RUN echo 'deb http://deb.torproject.org/torproject.org trusty main' | tee /etc/apt/sources.list.d/torproject.list && \
-    gpg --keyserver keys.gnupg.net --recv 886DDD89 && \
-    gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
-
-RUN echo 'deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main' | tee /etc/apt/sources.list.d/ruby.list && \
-    gpg --keyserver keyserver.ubuntu.com --recv C3173AA6 && \
-    gpg --export 80f70e11f0f0d5f10cb20e62f5da5f09c3173aa6 | apt-key add -
+FROM ubuntu:22.04
 
 RUN apt-get update && \
-    apt-get install -y tor polipo haproxy ruby2.1 libssl-dev wget curl build-essential zlib1g-dev libyaml-dev libssl-dev && \
-    ln -s /lib/x86_64-linux-gnu/libssl.so.1.0.0 /lib/libssl.so.1.0.0
-
-RUN update-rc.d -f tor remove && \
-    update-rc.d -f polipo remove
-
-RUN gem install excon -v 0.44.4
+    apt-get install -y tor haproxy ruby-full libssl-dev wget curl build-essential zlib1g-dev libyaml-dev libssl-dev netcat && \
+    ln -s /lib/x86_64-linux-gnu/libssl.so.1.0.0 /lib/libssl.so.1.0.0 && \
+    wget http://archive.ubuntu.com/ubuntu/pool/universe/p/polipo/polipo_1.1.1-8_amd64.deb && \
+    dpkg -i polipo_1.1.1-8_amd64.deb && \
+    update-rc.d -f tor remove && \
+    update-rc.d -f polipo remove && \
+    gem install excon -v 0.96.0
 
 ADD start.rb /usr/local/bin/start.rb
-RUN chmod +x /usr/local/bin/start.rb
-
 ADD newnym.sh /usr/local/bin/newnym.sh
-RUN chmod +x /usr/local/bin/newnym.sh
-
 ADD haproxy.cfg.erb /usr/local/etc/haproxy.cfg.erb
 ADD uncachable /etc/polipo/uncachable
 
+RUN chmod +x /usr/local/bin/start.rb
+RUN chmod +x /usr/local/bin/newnym.sh
+
 EXPOSE 5566 4444
 
-CMD /usr/local/bin/start.rb
+CMD ["/bin/bash", "-c", "/usr/local/bin/start.rb"]

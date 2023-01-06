@@ -1,7 +1,7 @@
 docker-rotating-proxy
 =====================
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/mattes/rotating-proxy.svg)](https://hub.docker.com/r/mattes/rotating-proxy/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/minhphuc429/rotating-tor-proxy.svg)](https://hub.docker.com/r/minhphuc429/rotating-tor-proxy/)
 
 ```
                Docker Container
@@ -19,13 +19,13 @@ Usage
 
 ```bash
 # build docker container
-docker build -t mattes/rotating-proxy:latest .
+docker build -t minhphuc429/rotating-tor-proxy:latest .
 
 # ... or pull docker container
-docker pull mattes/rotating-proxy:latest
+docker pull minhphuc429/rotating-tor-proxy:latest
 
 # start docker container
-docker run -d -p 5566:5566 -p 4444:4444 --env tors=25 mattes/rotating-proxy
+docker run -d -p 5566:5566 -p 4444:4444 --env tors=25 minhphuc429/rotating-tor-proxy
 
 # test with ...
 curl --proxy 127.0.0.1:5566 https://api.my-ip.io/ip
@@ -42,6 +42,7 @@ Usage with make
 2. Copy `example.env` as `.env` and edit settings
 
 3. Use `make` commands
+
 ```bash
 # start docker container
 make run
@@ -58,14 +59,13 @@ See `Makefile` for full list of available shortcuts.
 Further Readings
 ----------------
 
- * [Tor Manual](https://www.torproject.org/docs/tor-manual.html.en)
- * [Tor Control](https://www.thesprawl.org/research/tor-control-protocol/)
- * [HAProxy Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
- * [Polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/)
+* [Tor Manual](https://www.torproject.org/docs/tor-manual.html.en)
+* [Tor Control](https://www.thesprawl.org/research/tor-control-protocol/)
+* [HAProxy Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
+* [Polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/)
 
 --------------
 
 Please note: Tor offers a SOCKS Proxy only. In order to allow communication
 from HAproxy to Tor, Polipo is used to translate from HTTP proxy to SOCKS proxy.
 HAproxy is able to talk to HTTP proxies only.
-
